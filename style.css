@@ -1,164 +1,304 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Will You Be My Valentine? 💖</title>
-  <link rel="stylesheet" href="style.css" />
-  <meta name="theme-color" content="#ff4fbf"/>
-</head>
+:root{
+  --bg1:#0b1020;
+  --bg2:#2b0b2e;
+  --card:#0f1630cc;
+  --text:#fff7ff;
+  --muted:#ffd6ef;
+  --pink:#ff4fbf;
+  --blue:#7be7ff;
+  --good:#46ffb4;
+  --shadow: 0 18px 60px rgba(0,0,0,.55);
+  --radius: 26px;
+}
 
-<body>
-  <!-- dreamy background -->
-  <div class="bg-orb o1"></div>
-  <div class="bg-orb o2"></div>
-  <div class="bg-orb o3"></div>
-  <canvas id="hearts"></canvas>
-  <canvas id="confetti"></canvas>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 900px at 20% 10%, #7b4bff2b, transparent 60%),
+    radial-gradient(900px 800px at 80% 20%, #ff4fbf28, transparent 55%),
+    radial-gradient(900px 900px at 40% 90%, #7be7ff1f, transparent 55%),
+    linear-gradient(135deg, var(--bg1), var(--bg2));
+  overflow-x:hidden;
+}
 
-  <main class="wrap">
-    <!-- PAGE 1 -->
-    <section class="card page active" id="page1" aria-hidden="false">
-      <div class="glow"></div>
+.bg-orb{
+  position:fixed; width:520px; height:520px; border-radius:50%;
+  filter: blur(54px); opacity:.45; z-index:0; pointer-events:none;
+  mix-blend-mode: screen; animation: floaty 10s ease-in-out infinite;
+}
+.o1{left:-140px; top:-160px; background: radial-gradient(circle at 30% 30%, var(--pink), transparent 60%);}
+.o2{right:-180px; top:120px; background: radial-gradient(circle at 40% 35%, var(--blue), transparent 60%); animation-duration: 12s;}
+.o3{left:25%; bottom:-240px; background: radial-gradient(circle at 45% 40%, #a57bff, transparent 60%); animation-duration: 14s;}
+@keyframes floaty{0%,100%{transform: translateY(0) translateX(0)}50%{transform: translateY(22px) translateX(14px)}}
 
-      <div class="hero">
-        <div class="badge">💌 Valentine Surprise</div>
-        <h1>Will you be my Valentine? 💞</h1>
-        <p class="sub">Choose from your heart.</p>
+#hearts, #confetti{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+}
+#hearts{opacity:.75}
+#confetti{opacity:1}
 
-        <div class="btn-area" id="btnArea">
-          <button class="btn yes" id="yesBtn">YES! 💖</button>
-          <button class="btn no" id="noBtn">No :(</button>
-        </div>
+.wrap{
+  position:relative; z-index:2;
+  min-height:100vh;
+  display:flex; justify-content:center; align-items:flex-start;
+  padding: 28px 14px 70px;
+}
 
-        <p class="tiny" id="tinyHint">P.S. The “No” button is… shy 🙈</p>
-      </div>
-    </section>
+.card{
+  width:min(980px, 95vw);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #111a39b3, #0b1020b3);
+  border: 1px solid #ffffff1f;
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  position:relative;
+  padding: 22px;
+}
 
-    <!-- PAGE 2 -->
-    <section class="card page" id="page2" aria-hidden="true">
-      <div class="glow"></div>
+.glow{
+  position:absolute; inset:-2px;
+  background:
+    radial-gradient(600px 240px at 20% 20%, #ff4fbf40, transparent 55%),
+    radial-gradient(520px 260px at 80% 40%, #7be7ff2b, transparent 55%);
+  filter: blur(22px);
+  opacity:.9;
+  pointer-events:none;
+}
 
-      <div class="top">
-        <div class="pill">🎉 Celebration Mode</div>
-        <h2>Good choice, my princess 👑</h2>
-        <p class="lead">
-          You just unlocked <strong>unlimited hugs, kisses, and cuddles</strong>…
-          not for a day, not for a month — <span class="shine">for a whole lifetime</span>. ♾️
-        </p>
+.page{display:none; animation: enter .55s ease both;}
+.page.active{display:block;}
+@keyframes enter{from{opacity:0; transform: translateY(10px) scale(.99)}to{opacity:1; transform: translateY(0) scale(1)}}
 
-        <div class="gif-row">
-          <img class="gif" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Cute couple cats" loading="lazy">
-          <img class="gif" src="https://media.giphy.com/media/VbnUQpnihPSIgIXuZv/giphy.gif" alt="Cute love cats" loading="lazy">
-        </div>
+.badge{
+  display:inline-block; padding:7px 12px; border-radius:999px;
+  background:#ffffff14; border:1px solid #ffffff22; backdrop-filter: blur(10px);
+  box-shadow: 0 10px 35px rgba(0,0,0,.35);
+  margin-bottom:10px;
+}
+.hero{text-align:center; padding: 22px 10px 10px;}
+.hero h1{
+  font-size: clamp(30px, 4.2vw, 58px);
+  margin:10px 0 8px; line-height:1.05;
+  text-shadow: 0 18px 80px #ff4fbf26;
+}
+.sub{color:#ffe9f6; opacity:.92; font-size:16px; margin: 0 0 18px;}
+.tiny{color:var(--muted); opacity:.9; font-size:13px; margin-top:14px;}
 
-        <div class="bigline">
-          Now you’re stuck with me forever <span class="infty">∞</span>
-        </div>
+.btn-area{
+  position:relative;
+  width:min(560px, 92vw);
+  height: 150px;
+  margin: 14px auto 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+}
 
-        <div class="divider"></div>
+.btn{
+  border:none;
+  cursor:pointer;
+  border-radius: 999px;
+  padding: 14px 18px;
+  font-weight: 900;
+  letter-spacing:.2px;
+  transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+  user-select:none;
+}
+.btn:active{transform: scale(.985)}
 
-        <div class="tease">
-          <p class="q">Wait… do you want to change your mind? 😇</p>
-          <p class="too-late">TOO LATE! 😤</p>
+.yes{
+  background: linear-gradient(90deg, var(--pink), var(--blue));
+  color:#120015;
+  box-shadow: 0 18px 70px #ff4fbf2a;
+  position:relative;
+  z-index:3;
+}
+.yes:hover{filter: brightness(1.06)}
+.no{
+  background:#ffffff10;
+  border: 1px solid #ffffff2a;
+  color: var(--text);
+  box-shadow: 0 18px 60px rgba(0,0,0,.25);
+  position:absolute;
+  left: 60%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+  z-index:2;
+}
+.no.hide{opacity:0; pointer-events:none}
 
-          <ul class="rules">
-            <li>You already said <strong>YES</strong> — and I’m taking it seriously. 💍</li>
-            <li><strong>No take-backs</strong> allowed.</li>
-            <li>Soon you’ll be <strong>legally mine</strong> after marriage (and I’ll be proudly yours). 🫶</li>
-            <li>Every “no” from now on = <strong>10 kisses</strong> after marriage. 😚😚😚</li>
-            <li>You’re stuck with me forever — and I’ll keep choosing you, every day. ❤️</li>
-          </ul>
+.pill{
+  display:inline-block; padding:7px 12px; border-radius:999px;
+  background: linear-gradient(90deg, #ff4fbf1f, #7be7ff18);
+  border:1px solid #ffffff24;
+  font-weight:900; letter-spacing:.3px;
+}
+.top{padding: 10px 6px 6px;}
+h2{
+  margin:10px 0 8px;
+  font-size: clamp(26px, 3.2vw, 44px);
+  text-shadow: 0 18px 80px #000;
+}
+.lead{
+  color:#ffeaf7; opacity:.95;
+  line-height:1.8; font-size: 16.5px;
+  max-width: 860px;
+}
+.shine{
+  background: linear-gradient(90deg, #fff, #ffd1f0, #d8fbff);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  font-weight:1000;
+  text-shadow: 0 20px 90px #ff4fbf20;
+}
 
-          <div class="deal">Deal with it 😌💘</div>
-        </div>
+.gif-row{
+  margin:16px 0 8px;
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+.gif{
+  width:100%;
+  border-radius: 20px;
+  border:1px solid #ffffff22;
+  box-shadow: 0 18px 70px rgba(0,0,0,.35);
+}
+.bigline{
+  margin: 14px 0 4px;
+  font-size: 20px;
+  font-weight: 950;
+  text-shadow: 0 18px 70px #ff4fbf26;
+}
+.infty{font-size: 24px;}
 
-        <div class="divider"></div>
+.divider{
+  height:1px;
+  background: linear-gradient(90deg, transparent, #ffffff2a, transparent);
+  margin: 18px 0;
+}
 
-        <!-- Secret note -->
-        <section class="note-section">
-          <h3>A secret note for you</h3>
-          <p class="muted">Click the envelope to open it 💌</p>
+.tease .q{margin:0; font-size:16px; color:#ffeaf7; opacity:.95;}
+.too-late{
+  margin: 8px 0 12px;
+  font-weight:1000;
+  font-size: 22px;
+  color:#fff;
+  text-shadow: 0 20px 80px #ff4fbf2c;
+}
+.rules{
+  margin:0;
+  padding-left: 18px;
+  line-height:1.9;
+  color:#ffeaf7;
+  opacity:.95;
+}
+.deal{
+  margin-top: 14px;
+  display:inline-block;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background:#ffffff12;
+  border:1px solid #ffffff22;
+  font-weight: 950;
+}
 
-          <button class="envelope" id="envBtn" aria-expanded="false">
-            <span class="env-top"></span>
-            <span class="env-body"></span>
-            <span class="env-heart">💖</span>
-          </button>
+/* Envelope */
+.note-section{text-align:center;}
+.muted{color:var(--muted); opacity:.92; margin-top:6px}
+.envelope{
+  width: 150px;
+  height: 110px;
+  border:none;
+  background: transparent;
+  cursor:pointer;
+  position:relative;
+  margin: 12px auto 0;
+  filter: drop-shadow(0 20px 70px rgba(0,0,0,.35));
+}
+.env-body{
+  position:absolute; inset:0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ffffff1a, #ffffff0a);
+  border:1px solid #ffffff28;
+}
+.env-top{
+  position:absolute;
+  left:0; right:0; top:0;
+  height:60%;
+  background: linear-gradient(135deg, #ff4fbf2b, #7be7ff18);
+  border:1px solid #ffffff2a;
+  border-bottom:none;
+  border-radius: 18px 18px 10px 10px;
+  clip-path: polygon(0 0, 100% 0, 50% 70%);
+}
+.env-heart{
+  position:absolute;
+  left:50%; top:50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform: translate(-50%,-50%) scale(1)}50%{transform: translate(-50%,-50%) scale(1.08)}}
 
-          <div class="letter" id="letter" aria-hidden="true">
-            <h4>My Deyana…</h4>
-            <p>
-              I love you so much — sometimes it honestly scares me how deep it is.
-              I still can’t believe a simple coincidence turned into something this intense, this beautiful,
-              this <em>real</em>. The moment you came into my life, everything changed.
-            </p>
-            <p>
-              When you talk to me, it feels like magic. The second I hear your voice,
-              the world slows down — and I forget every problem, every noise, everything…
-              because all I want is to keep listening to you. You calm me and ignite me at the same time.
-            </p>
-            <p>
-              You are the most beautiful girl I have ever seen — and you will always be the same in my eyes.
-              Every moment with you stays in my heart forever. Whenever I see you in front of me,
-              I get lost in you… especially in your eyes. I don’t just like you, Deyana —
-              I’m completely, hopelessly in love with you.
-            </p>
-            <p>
-              And when you got even a small scratch, it hurt me inside. I want to protect you.
-              I want to love you gently and fiercely. I want to take care of you — in your good days and your bad days,
-              in your silence and your storms. I want to build a family with you, grow old with you,
-              and still flirt with you when we’re old and wrinkly.
-            </p>
-            <p>
-              I want to be your home — the place where you feel safe, adored, and chosen.
-              You are my favorite thought, my favorite voice, my favorite feeling.
-              If I could, I would keep you in my arms forever… and call it paradise.
-            </p>
-            <p class="sign">
-              Forever yours, <br/>
-              <strong>Adi ❤️</strong>
-            </p>
-          </div>
-        </section>
+.letter{
+  margin: 14px auto 0;
+  max-width: 860px;
+  text-align:left;
+  padding: 16px 16px;
+  border-radius: 20px;
+  border:1px solid #ffffff22;
+  background:#00000022;
+  backdrop-filter: blur(10px);
+  display:none;
+  animation: enter .5s ease both;
+}
+.letter.show{display:block}
+.letter h4{margin:0 0 8px; font-size:20px}
+.letter p{margin: 0 0 12px; line-height:1.85; color:#ffeaf7; opacity:.95}
+.sign{margin-top: 10px; opacity:1}
+.sign strong{color:#fff}
 
-        <div class="divider"></div>
+/* Timeline */
+.milestones{text-align:left;}
+.timeline{
+  margin-top: 10px;
+  padding-left: 6px;
+  border-left: 2px solid #ffffff25;
+}
+.t-item{
+  display:flex;
+  gap:10px;
+  padding: 10px 0 10px 10px;
+  opacity:0;
+  transform: translateY(8px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.t-item.show{opacity:1; transform: translateY(0)}
+.dot{
+  width:12px; height:12px; border-radius:50%;
+  background: linear-gradient(90deg, var(--pink), var(--blue));
+  box-shadow: 0 10px 30px #ff4fbf35;
+  margin-top: 6px;
+  flex: 0 0 auto;
+}
+.t-item h5{margin:0; font-size:16px}
+.t-item p{margin:3px 0 0; color:var(--muted); opacity:.95}
+.t-item.final h5{font-size:17px}
 
-        <!-- Milestones -->
-        <section class="milestones">
-          <h3>Our milestones ✨</h3>
-          <p class="muted">A little timeline of the moments that became my favorite memories.</p>
+.closing{text-align:center;}
+.ghost{
+  background:#ffffff12;
+  border:1px solid #ffffff2a;
+  color:var(--text);
+  margin-top: 10px;
+}
 
-          <div class="timeline" id="timeline">
-            <div class="t-item"><span class="dot"></span><div><h5>When I saw you</h5><p>Dec 24, 2025</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First conversation</h5><p>Jan 10, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First late night talks</h5><p>Jan 23, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First meet up</h5><p>Jan 26, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First almost whole-night chatting</h5><p>Jan 30, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First phone call</h5><p>Feb 5, 2026 — 1 min 51 sec</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First 5+ min call</h5><p>Feb 8, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>You called me “Adi”</h5><p>Feb 13, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>You called me back for the first time</h5><p>Feb 13, 2026</p></div></div>
-            <div class="t-item"><span class="dot"></span><div><h5>First 10+ min call</h5><p>Feb 14, 2026</p></div></div>
-            <div class="t-item final"><span class="dot"></span><div><h5>Destination wedding + living together forever</h5><p>Loving each other through this life… and after life ♾️</p></div></div>
-          </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <section class="closing">
-          <h3>One last thing…</h3>
-          <p class="lead">
-            Thank you for everything you’ve given me, Deyana — even the smallest things mean more to me than anything.
-            You are my whole world. <strong>I love you so much.</strong> 💖
-          </p>
-          <button class="btn ghost" id="backBtn">↩ Back to First Page</button>
-        </section>
-
-      </div>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
-</body>
-</html>
+@media (max-width:720px){
+  .gif-row{grid-template-columns:1fr;}
+  .btn-area{height: 180px;}
+}
