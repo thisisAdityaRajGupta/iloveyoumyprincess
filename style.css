@@ -291,39 +291,51 @@ h2{
 .sign{margin-top: 10px}
 .sign strong{color:#111}
 
-/* ------- Timeline connected animation (FIXED) ------- */
+/* ------- TIMELINE (FIXED: LINE ALWAYS SHOWS + ANIMATES) ------- */
 .milestones{text-align:left;}
 
 .timeline-wrap{
   position:relative;
   margin-top: 12px;
-  padding-left: 14px;
+  padding-left: 54px; /* space for the svg line */
 }
 
-/* IMPORTANT: SVG must have a real height and sit behind dots */
+/* Make SVG visible and full height */
 #timelinePath{
   position:absolute;
-  left: 6px;            /* aligns line with dots */
+  left: 14px;
   top: 0;
   width: 40px;
   height: 100%;
-  pointer-events:none;
-  overflow: visible;
   z-index: 0;
+  overflow: visible;
+  pointer-events:none;
 }
 
-/* make sure path is visible even when opacity is set by JS */
-#timelinePath path, #tlPath{
-  opacity: 1;
-}
-
+/* keep items above the svg */
 .timeline{
   position:relative;
   z-index: 1;
-  margin-left: 22px;
   display:flex;
   flex-direction:column;
   gap: 10px;
+}
+
+/* The path itself */
+#timelinePath .tl{
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  opacity: 1;
+  filter: drop-shadow(0 10px 18px rgba(255,93,168,.18));
+}
+
+/* We add .draw on SVG from JS to start it */
+#timelinePath.draw .tl{
+  animation: drawLine 2.4s ease forwards;
+}
+
+@keyframes drawLine{
+  to { stroke-dashoffset: 0; }
 }
 
 .t-item{
@@ -343,7 +355,6 @@ h2{
   margin-top: 6px;
   flex: 0 0 auto;
 }
-
 .t-item h5{margin:0; font-size:16px}
 .t-item p{margin:3px 0 0; color:var(--muted)}
 .t-item.final h5{font-size:17px}
@@ -360,5 +371,6 @@ h2{
 @media (max-width:720px){
   .gif-row{grid-template-columns:1fr;}
   .btn-area{height: 200px;}
-  #timelinePath{left: 4px;}
+  .timeline-wrap{padding-left: 46px;}
+  #timelinePath{left: 10px;}
 }
