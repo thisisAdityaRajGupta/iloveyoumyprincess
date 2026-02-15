@@ -9,8 +9,8 @@ const backBtn = document.getElementById("backBtn");
 let dodgeCount = 0;
 let yesScale = 1;
 
-// Helper
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+const rand = (min,max)=> Math.random()*(max-min)+min;
 
 function showPage2(){
   page1.classList.remove("active");
@@ -18,13 +18,12 @@ function showPage2(){
   page2.classList.add("active");
   page2.setAttribute("aria-hidden", "false");
 
-  // celebration
-  burstConfetti(180);
-  setTimeout(() => burstConfetti(220), 250);
-  setTimeout(() => burstConfetti(220), 650);
+  // BIG celebration sequence
+  megaCelebrate();
 
-  // animate timeline items as user scrolls
+  // timeline
   setupTimelineReveal();
+  setTimeout(() => animateTimelinePath(), 400);
 }
 
 yesBtn.addEventListener("click", showPage2);
@@ -37,22 +36,19 @@ backBtn?.addEventListener("click", () => {
   window.scrollTo({top:0, behavior:"smooth"});
 });
 
-// ---------- NO button dodge logic ----------
-function moveNoButton(nearX, nearY){
+// ---------- NO button dodge ----------
+function moveNoButton(){
   const rect = btnArea.getBoundingClientRect();
   const w = rect.width;
   const h = rect.height;
 
-  // Make it bounce to left/right around the YES
   const side = (dodgeCount % 2 === 0) ? -1 : 1;
 
-  // range inside container
-  let x = w/2 + side * (w * 0.22) + (Math.random()*30 - 15);
-  let y = h/2 + (Math.random()*40 - 20);
+  let x = w/2 + side * (w * 0.25) + (Math.random()*40 - 20);
+  let y = h/2 + (Math.random()*50 - 25);
 
-  // keep inside area
-  x = clamp(x, 70, w - 70);
-  y = clamp(y, 40, h - 40);
+  x = clamp(x, 75, w - 75);
+  y = clamp(y, 45, h - 45);
 
   noBtn.style.left = `${x}px`;
   noBtn.style.top = `${y}px`;
@@ -60,63 +56,56 @@ function moveNoButton(nearX, nearY){
 
   dodgeCount++;
 
-  // YES grows as she tries to reach NO
-  yesScale = clamp(1 + dodgeCount * 0.08, 1, 1.85);
+  yesScale = clamp(1 + dodgeCount * 0.09, 1, 2.0);
   yesBtn.style.transform = `scale(${yesScale})`;
 
-  // after 5-6 tries, NO goes behind YES + becomes basically impossible
   if(dodgeCount >= 6){
+    noBtn.style.opacity = "0.03";
     noBtn.style.zIndex = "1";
-    yesBtn.style.zIndex = "3";
     noBtn.style.left = "50%";
     noBtn.style.top = "50%";
-    noBtn.style.opacity = "0.05";
-    // put it behind yes
     noBtn.style.pointerEvents = "none";
-    yesBtn.style.transform = `scale(1.9)`;
+    yesBtn.style.transform = `scale(2.05)`;
   }
 }
 
-// Desktop: when mouse approaches NO
-noBtn.addEventListener("mouseenter", (e) => {
-  moveNoButton(e.clientX, e.clientY);
-});
+noBtn.addEventListener("mouseenter", moveNoButton);
+noBtn.addEventListener("touchstart", (e) => { moveNoButton(); e.preventDefault(); }, {passive:false});
 
-// Mobile: when finger touches near NO
-noBtn.addEventListener("touchstart", (e) => {
-  moveNoButton(0,0);
-  e.preventDefault();
-}, {passive:false});
-
-// Also dodge if mouse moves close to it
 btnArea.addEventListener("mousemove", (e) => {
   const nb = noBtn.getBoundingClientRect();
   const dx = e.clientX - (nb.left + nb.width/2);
   const dy = e.clientY - (nb.top + nb.height/2);
   const dist = Math.sqrt(dx*dx + dy*dy);
-
-  if(dist < 90 && dodgeCount < 6){
-    moveNoButton(e.clientX, e.clientY);
-  }
+  if(dist < 95 && dodgeCount < 6) moveNoButton();
 });
 
-// ---------- Envelope open ----------
+// ---------- Envelope: letter comes OUT ----------
 const envBtn = document.getElementById("envBtn");
 const letter = document.getElementById("letter");
 
 envBtn?.addEventListener("click", () => {
-  const open = letter.classList.toggle("show");
+  const open = envBtn.classList.toggle("open");
   envBtn.setAttribute("aria-expanded", open ? "true" : "false");
-  letter.setAttribute("aria-hidden", open ? "false" : "true");
+
   if(open){
-    burstConfetti(90);
-    setTimeout(() => letter.scrollIntoView({behavior:"smooth", block:"start"}), 120);
+    burstConfetti(120, window.innerWidth/2, window.innerHeight/3);
+    setTimeout(() => {
+      letter.classList.add("show");
+      letter.setAttribute("aria-hidden", "false");
+      letter.scrollIntoView({behavior:"smooth", block:"start"});
+    }, 520);
+  }else{
+    letter.classList.remove("show");
+    letter.setAttribute("aria-hidden", "true");
   }
 });
 
-// ---------- Floating hearts canvas ----------
+// ---------- Hearts background ----------
 const heartsCanvas = document.getElementById("hearts");
 const hctx = heartsCanvas.getContext("2d");
+const confCanvas = document.getElementById("confetti");
+const cctx = confCanvas.getContext("2d");
 
 function resizeCanvas(c){
   const dpr = window.devicePixelRatio || 1;
@@ -132,28 +121,25 @@ function setTransform(ctx){
 }
 
 function safeResizeAll(){
-  resizeCanvas(heartsCanvas);
-  setTransform(hctx);
-  resizeCanvas(confCanvas);
-  setTransform(cctx);
+  resizeCanvas(heartsCanvas); setTransform(hctx);
+  resizeCanvas(confCanvas); setTransform(cctx);
 }
 window.addEventListener("resize", safeResizeAll);
 
-// hearts
+// floating hearts
 const hearts = [];
-const HEARTS_COUNT = 26;
-const rand = (min,max)=> Math.random()*(max-min)+min;
+const HEARTS_COUNT = 22;
 
 function spawnHeart(){
   hearts.push({
     x: rand(0, window.innerWidth),
-    y: window.innerHeight + rand(20, 200),
-    vy: rand(0.35, 1.05),
-    vx: rand(-0.25, 0.25),
-    s: rand(10, 22),
+    y: window.innerHeight + rand(30, 240),
+    vy: rand(0.25, 0.85),
+    vx: rand(-0.20, 0.20),
+    s: rand(10, 20),
     r: rand(-0.8, 0.8),
-    vr: rand(-0.006, 0.006),
-    a: rand(0.35, 0.75),
+    vr: rand(-0.005, 0.005),
+    a: rand(0.22, 0.55),
   });
 }
 for(let i=0;i<HEARTS_COUNT;i++) spawnHeart();
@@ -173,11 +159,11 @@ function drawHeart(ctx,x,y,s,rot,a){
   ctx.bezierCurveTo(t, -t/2, 0, -t/2, 0, t/4);
 
   const g = ctx.createLinearGradient(-t, -t, t, t);
-  g.addColorStop(0, "rgba(255,79,191,0.95)");
-  g.addColorStop(1, "rgba(123,231,255,0.85)");
+  g.addColorStop(0, "rgba(255,93,168,0.9)");
+  g.addColorStop(1, "rgba(183,166,255,0.85)");
   ctx.fillStyle = g;
-  ctx.shadowColor = "rgba(255,79,191,0.35)";
-  ctx.shadowBlur = 18;
+  ctx.shadowColor = "rgba(255,93,168,0.20)";
+  ctx.shadowBlur = 14;
   ctx.fill();
   ctx.restore();
 }
@@ -189,35 +175,49 @@ function animHearts(){
     p.y -= p.vy;
     p.r += p.vr;
     drawHeart(hctx, p.x, p.y, p.s, p.r, p.a);
-    if(p.y < -80){
+    if(p.y < -90){
       p.y = window.innerHeight + rand(60, 220);
       p.x = rand(0, window.innerWidth);
-      p.vy = rand(0.35, 1.05);
+      p.vy = rand(0.25, 0.85);
     }
   }
   requestAnimationFrame(animHearts);
 }
 
-// ---------- Confetti canvas ----------
-const confCanvas = document.getElementById("confetti");
-const cctx = confCanvas.getContext("2d");
+// ---------- Confetti (stronger celebration) ----------
 const confetti = [];
 
-function burstConfetti(count=140){
-  const cx = window.innerWidth/2;
-  const cy = window.innerHeight/4;
+function burstConfetti(count=160, cx=window.innerWidth/2, cy=window.innerHeight/3){
   for(let i=0;i<count;i++){
     confetti.push({
-      x: cx + rand(-40, 40),
-      y: cy + rand(-10, 10),
-      vx: rand(-4.6, 4.6),
-      vy: rand(-7.6, -2.8),
-      g: rand(0.09, 0.15),
-      w: rand(6, 11),
+      x: cx + rand(-60, 60),
+      y: cy + rand(-20, 20),
+      vx: rand(-5.2, 5.2),
+      vy: rand(-8.5, -3.2),
+      g: rand(0.10, 0.16),
+      w: rand(5, 10),
       h: rand(10, 18),
       r: rand(0, Math.PI),
-      vr: rand(-0.2, 0.2),
-      life: rand(70, 130)
+      vr: rand(-0.22, 0.22),
+      life: rand(85, 150)
+    });
+  }
+}
+
+// extra heart “pop”
+function burstHearts(count=22, cx=window.innerWidth/2, cy=window.innerHeight/3){
+  for(let i=0;i<count;i++){
+    hearts.push({
+      x: cx + rand(-30, 30),
+      y: cy + rand(-10, 10),
+      vy: rand(1.0, 2.2),
+      vx: rand(-1.6, 1.6),
+      s: rand(14, 24),
+      r: rand(-1.2, 1.2),
+      vr: rand(-0.02, 0.02),
+      a: rand(0.55, 0.9),
+      pop:true,
+      ttl: rand(70, 110)
     });
   }
 }
@@ -235,25 +235,51 @@ function animConfetti(){
     cctx.save();
     cctx.translate(p.x, p.y);
     cctx.rotate(p.r);
-    cctx.globalAlpha = Math.min(1, p.life/60);
+    cctx.globalAlpha = Math.min(1, p.life/70);
 
     const g = cctx.createLinearGradient(-p.w, -p.h, p.w, p.h);
-    g.addColorStop(0, "rgba(255,79,191,0.95)");
-    g.addColorStop(1, "rgba(123,231,255,0.9)");
+    g.addColorStop(0, "rgba(255,93,168,0.95)");
+    g.addColorStop(1, "rgba(183,166,255,0.9)");
     cctx.fillStyle = g;
-    cctx.shadowColor = "rgba(255,255,255,0.14)";
-    cctx.shadowBlur = 10;
     cctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
     cctx.restore();
 
-    if(p.life <= 0 || p.y > window.innerHeight + 90){
+    if(p.life <= 0 || p.y > window.innerHeight + 100){
       confetti.splice(i, 1);
     }
   }
+
+  // fade out popped hearts faster
+  for(const p of hearts){
+    if(p.pop){
+      p.x += p.vx;
+      p.y -= p.vy;
+      p.ttl -= 1;
+      p.a *= 0.985;
+      if(p.ttl <= 0){
+        p.pop = false;
+        p.a = 0.25;
+        p.vx = rand(-0.2,0.2);
+        p.vy = rand(0.25,0.85);
+      }
+    }
+  }
+
   requestAnimationFrame(animConfetti);
 }
 
-// ---------- Timeline reveal ----------
+function megaCelebrate(){
+  // multi-burst feels “bigger”
+  burstConfetti(220, window.innerWidth*0.25, window.innerHeight*0.35);
+  burstConfetti(220, window.innerWidth*0.75, window.innerHeight*0.35);
+  burstConfetti(260, window.innerWidth*0.5, window.innerHeight*0.25);
+  burstHearts(26, window.innerWidth*0.5, window.innerHeight*0.32);
+
+  setTimeout(()=> burstConfetti(220, window.innerWidth*0.5, window.innerHeight*0.28), 220);
+  setTimeout(()=> burstHearts(18, window.innerWidth*0.5, window.innerHeight*0.30), 240);
+}
+
+// ---------- Timeline reveal + connecting path draw ----------
 function setupTimelineReveal(){
   const items = document.querySelectorAll(".t-item");
   const obs = new IntersectionObserver((entries) => {
@@ -263,9 +289,24 @@ function setupTimelineReveal(){
         obs.unobserve(en.target);
       }
     });
-  }, { threshold: 0.2 });
+  }, { threshold: 0.25 });
 
   items.forEach(i => obs.observe(i));
+}
+
+function animateTimelinePath(){
+  const path = document.querySelector("#timelinePath path");
+  if(!path) return;
+
+  const length = path.getTotalLength();
+  path.style.strokeDasharray = `${length}`;
+  path.style.strokeDashoffset = `${length}`;
+  path.style.opacity = "1";
+
+  // draw
+  path.getBoundingClientRect(); // force layout
+  path.style.transition = "stroke-dashoffset 1.8s ease";
+  path.style.strokeDashoffset = "0";
 }
 
 // init
