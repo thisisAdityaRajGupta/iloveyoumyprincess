@@ -291,28 +291,41 @@ h2{
 .sign{margin-top: 10px}
 .sign strong{color:#111}
 
-/* ------- Timeline connected animation (SVG path draws) ------- */
+/* ------- Timeline connected animation (FIXED) ------- */
 .milestones{text-align:left;}
+
 .timeline-wrap{
   position:relative;
   margin-top: 12px;
-  padding-left: 10px;
+  padding-left: 14px;
 }
+
+/* IMPORTANT: SVG must have a real height and sit behind dots */
 #timelinePath{
   position:absolute;
-  left: 12px;
+  left: 6px;            /* aligns line with dots */
   top: 0;
   width: 40px;
   height: 100%;
+  pointer-events:none;
   overflow: visible;
+  z-index: 0;
+}
+
+/* make sure path is visible even when opacity is set by JS */
+#timelinePath path, #tlPath{
+  opacity: 1;
 }
 
 .timeline{
+  position:relative;
+  z-index: 1;
   margin-left: 22px;
   display:flex;
   flex-direction:column;
   gap: 10px;
 }
+
 .t-item{
   display:flex;
   gap:10px;
@@ -322,6 +335,7 @@ h2{
   transition: opacity .6s ease, transform .6s ease;
 }
 .t-item.show{opacity:1; transform: translateY(0)}
+
 .dot{
   width:12px; height:12px; border-radius:50%;
   background: linear-gradient(90deg, var(--pink), var(--lav));
@@ -329,6 +343,7 @@ h2{
   margin-top: 6px;
   flex: 0 0 auto;
 }
+
 .t-item h5{margin:0; font-size:16px}
 .t-item p{margin:3px 0 0; color:var(--muted)}
 .t-item.final h5{font-size:17px}
@@ -345,4 +360,5 @@ h2{
 @media (max-width:720px){
   .gif-row{grid-template-columns:1fr;}
   .btn-area{height: 200px;}
+  #timelinePath{left: 4px;}
 }
