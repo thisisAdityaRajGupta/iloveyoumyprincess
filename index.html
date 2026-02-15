@@ -81,10 +81,11 @@
           <p class="muted">Click the envelope to open it 💌</p>
 
           <button class="envelope" id="envBtn" aria-expanded="false">
-            <span class="env-top"></span>
-            <span class="env-body"></span>
-            <span class="env-heart">💖</span>
-          </button>
+  <span class="paper"></span>
+  <span class="env-top"></span>
+  <span class="env-body"></span>
+  <span class="env-heart">💖</span>
+</button>
 
           <div class="letter" id="letter" aria-hidden="true">
             <h4>My Deyana…</h4>
@@ -128,6 +129,20 @@
           <h3>Our milestones ✨</h3>
           <p class="muted">A little timeline of the moments that became my favorite memories.</p>
 
+         <div class="timeline-wrap">
+  <svg id="timelinePath" viewBox="0 0 40 1200" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M20 20
+             C 20 120, 20 120, 20 220
+             S 20 320, 20 420
+             S 20 520, 20 620
+             S 20 720, 20 820
+             S 20 920, 20 1020
+             S 20 1120, 20 1180"
+          fill="none"
+          stroke="rgba(255,93,168,.55)"
+          stroke-width="3"
+          stroke-linecap="round"/>
+  </svg>
           <div class="timeline" id="timeline">
             <div class="t-item"><span class="dot"></span><div><h5>When I saw you</h5><p>Dec 24, 2025</p></div></div>
             <div class="t-item"><span class="dot"></span><div><h5>First conversation</h5><p>Jan 10, 2026</p></div></div>
@@ -141,6 +156,7 @@
             <div class="t-item"><span class="dot"></span><div><h5>First 10+ min call</h5><p>Feb 14, 2026</p></div></div>
             <div class="t-item final"><span class="dot"></span><div><h5>Final Stop: wedding & living together forever</h5><p>Loving each other through this life… and after life ♾️</p></div></div>
           </div>
+         </div>
         </section>
 
         <div class="divider"></div>
@@ -161,6 +177,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
